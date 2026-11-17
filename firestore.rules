@@ -1,0 +1,36 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /users/{userId}/attempts/{attemptId} {
+      function isOwner() {
+        return request.auth != null && request.auth.uid == userId;
+      }
+
+      function validAttempt() {
+        let data = request.resource.data;
+        return data.keys().hasAll([
+            'schemaVersion', 'variant', 'categoryId',
+            'questionCount', 'correctCount', 'submittedAt'
+          ])
+          && data.keys().hasOnly([
+            'schemaVersion', 'variant', 'categoryId',
+            'questionCount', 'correctCount', 'submittedAt'
+          ])
+          && data.schemaVersion is int && data.schemaVersion == 1
+          && data.variant is string && data.variant == 'A'
+          && data.categoryId is int && data.categoryId == 9
+          && data.questionCount is int && data.questionCount == 10
+          && data.correctCount is int
+          && data.correctCount >= 0 && data.correctCount <= 10
+          && data.submittedAt is timestamp
+          && data.submittedAt == request.time;
+      }
+
+      allow get, list: if isOwner();
+      allow create: if isOwner() && validAttempt();
+      allow update, delete: if false;
+    }
+
+    // No other collections are readable or writable through client SDKs.
+  }
+}

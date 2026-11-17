@@ -1,0 +1,1 @@
+{"firestore":{"rules":"firestore.rules"},"flutter":{"platforms":{"android":{"default":{"projectId":"quiz-app-bfbe6","appId":"1:656179891654:android:cc4a9241ab40ccf84076c7","fileOutput":"android/app/google-services.json"}},"dart":{"lib/firebase_options.dart":{"projectId":"quiz-app-bfbe6","configurations":{"android":"1:656179891654:android:cc4a9241ab40ccf84076c7"}}}}}}
